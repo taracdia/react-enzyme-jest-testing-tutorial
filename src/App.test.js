@@ -1,6 +1,7 @@
 import { shallow, mount } from 'enzyme';
 import App from './App';
 import Account from "./Account.js"
+import toJson from "enzyme-to-json";
 
 it("renderss without crashing", () => {
   mount(<App />);
@@ -18,14 +19,24 @@ const user = {
   username: "Dave"
 };
 
-// describe("<Account />", () => {
-//   it("contains account", () => {
-//     const wrapper = mount(<Account />);
-//     // const value = wrapper.find("p").text();
-//     // expect(value).toEqual("david@gmail.com");
-//   });
-//   // it("accepts user account props", () => {
-//   //   const wrapper = mount(<Account user={user} />);
-//   //   expect(wrapper.props().user).toEqual(user);
-//   // });
-// });
+describe("<Account />", () => {
+  it("contains account", () => {
+    const wrapper = mount(<Account user={user} />);
+    const value = wrapper.find("p").text();
+    expect(value).toEqual("david@gmail.com");
+  });
+  it("accepts user account props", () => {
+    const wrapper = mount(<Account user={user} />);
+    expect(wrapper.props().user).toEqual(user);
+  });
+});
+
+it("renders correctly with no error message", () =>{
+  const wrapper = mount(<App />);
+  expect(wrapper.state("error")).toEqual(null);
+});
+
+it("renders correctly", () => {
+  const tree = shallow(<App />);
+  expect(toJson(tree)).toMatchSnapshot();
+});
